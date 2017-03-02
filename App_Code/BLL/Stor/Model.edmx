@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище StoreModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Articules">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="surname" Type="nvarchar" MaxLength="50" />
+          <Property Name="orderID" Type="int" />
+        </EntityType>
+        <EntityType Name="forComptable">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date" Type="date" />
+          <Property Name="goodID" Type="int" />
+        </EntityType>
+        <EntityType Name="Goods">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="price" Type="money" />
+          <Property Name="categoryID" Type="int" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date" Type="date" />
+          <Property Name="goodOrderId" Type="int" />
+        </EntityType>
+        <EntityType Name="OrdersGoods">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="orderID" Type="int" />
+          <Property Name="goodID" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="taxCalculation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date" Type="date" />
+          <Property Name="goodID" Type="int" />
+        </EntityType>
+        <Association Name="FK_Customers_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Customers">
+              <PropertyRef Name="orderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goods_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
+          <End Role="Goods" Type="Self.Goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Goods">
+              <PropertyRef Name="categoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersGoods_Goods">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="0..1" />
+          <End Role="OrdersGoods" Type="Self.OrdersGoods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrdersGoods">
+              <PropertyRef Name="goodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersGoods_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="OrdersGoods" Type="Self.OrdersGoods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrdersGoods">
+              <PropertyRef Name="orderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="showLuxury" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="categoryID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="Хранилище StoreModelContainer">
+          <EntitySet Name="Articules" EntityType="Self.Articules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="forComptable" EntityType="Self.forComptable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Goods" EntityType="Self.Goods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdersGoods" EntityType="Self.OrdersGoods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="taxCalculation" EntityType="Self.taxCalculation" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Customers_Orders" Association="Self.FK_Customers_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Customers" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goods_Categories" Association="Self.FK_Goods_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Goods" EntitySet="Goods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersGoods_Goods" Association="Self.FK_OrdersGoods_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrdersGoods" EntitySet="OrdersGoods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersGoods_Orders" Association="Self.FK_OrdersGoods_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrdersGoods" EntitySet="OrdersGoods" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Articule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Categories" FromRole="Categories" ToRole="Goods" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="surname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="orderID" Type="Int32" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Customers_Orders" FromRole="Customers" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="forComptable">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <Property Name="goodID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Good">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="categoryID" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Goods_Categories" FromRole="Goods" ToRole="Categories" />
+          <NavigationProperty Name="OrdersGoods" Relationship="Self.FK_OrdersGoods_Goods" FromRole="Goods" ToRole="OrdersGoods" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <Property Name="goodOrderId" Type="Int32" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Customers_Orders" FromRole="Orders" ToRole="Customers" />
+          <NavigationProperty Name="OrdersGoods" Relationship="Self.FK_OrdersGoods_Orders" FromRole="Orders" ToRole="OrdersGoods" />
+        </EntityType>
+        <EntityType Name="OrdersGood">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="orderID" Type="Int32" />
+          <Property Name="goodID" Type="Int32" />
+          <NavigationProperty Name="Good" Relationship="Self.FK_OrdersGoods_Goods" FromRole="OrdersGoods" ToRole="Goods" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_OrdersGoods_Orders" FromRole="OrdersGoods" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="taxCalculation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <Property Name="goodID" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_Goods_Categories">
+          <End Role="Categories" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Goods" Type="Self.Good" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Goods">
+              <PropertyRef Name="categoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customers_Orders">
+          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+          <End Role="Customers" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Customers">
+              <PropertyRef Name="orderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersGoods_Goods">
+          <End Role="Goods" Type="Self.Good" Multiplicity="0..1" />
+          <End Role="OrdersGoods" Type="Self.OrdersGood" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrdersGoods">
+              <PropertyRef Name="goodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersGoods_Orders">
+          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+          <End Role="OrdersGoods" Type="Self.OrdersGood" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrdersGoods">
+              <PropertyRef Name="orderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StoreEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Articules" EntityType="Self.Articule" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="forComptables" EntityType="Self.forComptable" />
+          <EntitySet Name="Goods" EntityType="Self.Good" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="OrdersGoods" EntityType="Self.OrdersGood" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="taxCalculations" EntityType="Self.taxCalculation" />
+          <AssociationSet Name="FK_Goods_Categories" Association="Self.FK_Goods_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Goods" EntitySet="Goods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customers_Orders" Association="Self.FK_Customers_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Customers" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersGoods_Goods" Association="Self.FK_OrdersGoods_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrdersGoods" EntitySet="OrdersGoods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersGoods_Orders" Association="Self.FK_OrdersGoods_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrdersGoods" EntitySet="OrdersGoods" />
+          </AssociationSet>
+          <FunctionImport Name="showLuxury" ReturnType="Collection(StoreModel.showLuxury_Result)">
+            <Parameter Name="categoryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(StoreModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(StoreModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+        </EntityContainer>
+        <ComplexType Name="showLuxury_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="price" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="categoryID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище StoreModelContainer" CdmEntityContainer="StoreEntities">
+          <EntitySetMapping Name="Articules">
+            <EntityTypeMapping TypeName="StoreModel.Articule">
+              <MappingFragment StoreEntitySet="Articules">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="StoreModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="StoreModel.Customer">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="orderID" ColumnName="orderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="forComptables">
+            <EntityTypeMapping TypeName="StoreModel.forComptable">
+              <MappingFragment StoreEntitySet="forComptable">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="goodID" ColumnName="goodID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Goods">
+            <EntityTypeMapping TypeName="StoreModel.Good">
+              <MappingFragment StoreEntitySet="Goods">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="categoryID" ColumnName="categoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="StoreModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="goodOrderId" ColumnName="goodOrderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdersGoods">
+            <EntityTypeMapping TypeName="StoreModel.OrdersGood">
+              <MappingFragment StoreEntitySet="OrdersGoods">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="orderID" ColumnName="orderID" />
+                <ScalarProperty Name="goodID" ColumnName="goodID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="StoreModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="taxCalculations">
+            <EntityTypeMapping TypeName="StoreModel.taxCalculation">
+              <MappingFragment StoreEntitySet="taxCalculation">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="goodID" ColumnName="goodID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="showLuxury" FunctionName="Хранилище StoreModel.showLuxury">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StoreModel.showLuxury_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="categoryID" ColumnName="categoryID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище StoreModel.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище StoreModel.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище StoreModel.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище StoreModel.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StoreModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище StoreModel.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StoreModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище StoreModel.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище StoreModel.sp_upgraddiagrams" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
