@@ -13,14 +13,11 @@
     <%
         foreach(var item in Items) { %> 
         <p>
-            <span data-itemID="<%=item.id %>""><%=item.name %></span>
             <a  href="<%="/getgoods/" + item.id %>"><%=item.name %></a> 
         </p>
         <%}
          %>
 
-
-        <a runat="server" href="~/getgoods/1">id1</a>
     </div>
     </form>
 </body>
